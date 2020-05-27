@@ -29,62 +29,71 @@ include 'emu8086.inc'
 .CODE  
     ;/////=========MAIN PROCEDURE WHERE ALL OTHER PROCEDURES ARE CALLED ======//////
     MAIN PROC  
-        CALL RANDOMIZE              ; Procedure Randomly store the elements in array
-        PRINTN 'Sorting...'         ;Displays "Sorting" on the screen`
-        PRINTN                      ;Moves to New Line
-        CALL SORT_ASCEND            ; Procedure to sort the array in ascending order    
-        CALL SORT_DESCEND           ; Procedure to sort the array in descending order    
-        PRINTN 'Array Sorted!'      ;Displays "Array Sorted" on the screen
-        PRINTN                      ;Moves to New Line
-        PRINTn 'The Ascending order:';Displays "The Ascending order" on the screen
-        PRINTN                      ;Moves to New Line
-        CALL PRINT_ASC              ; Procedure to print the Ascending array
-        PRINTN 'The Descending order:';Displays "The Descending order" on the scree
-        PRINTN                      ;Moves to New Line
-        CALL PRINT_DES              ; Procedure to print the Descending array  
+        CALL RANDOMIZE                ; Procedure Randomly store the elements in array
+        PRINTN 'Sorting...'           ;Displays "Sorting" on the screen`
+        PRINTN                        ;Moves to New Line
+        CALL SORT_ASCEND              ;Calling Procedure to sort the array in ascending order    
+        CALL SORT_DESCEND             ;Calling Procedure to sort the array in descending order    
+        PRINTN 'Array Sorted!'        ;Displays "Array Sorted" on the screen
+        PRINTN                        ;Moves to New Line
+        PRINTN 'The Ascending order:' ;Displays "The Ascending order" on the screen
+        CALL PRINT_ASC                ;Calling Procedure to print the Ascending array 
+        PRINTN                        ;Moves to New Line
+        PRINTN 'The Descending order:';Displays "The Descending order" on the screen
+        CALL PRINT_DES                ;Calling Procedure to print the Descending array  
         RET  
     MAIN ENDP
 
  
  
-;/ 
-RANDOMIZE PROC
-    MOV SI ,0000H   
-    MOV DI ,00002H      
-    MOV CX , 100
-array3:
-    MOV AX, ARR2[SI] 
-    MOV DX, ARR2[DI] 
-    XCHG AX,DX
-    MOV ARR2[SI],AX 
-    MOV  ARR2[DI],DX
-    MOV BX,r
-    ADD DI, BX
-    ADD SI, BX
-    SUB CX, 1
-    JNZ array3
-PRINTN
-RET
+;/////=========Procdure for Randomly Storing the array  ======//////
 
-RANDOMIZE ENDP
+
+ 
+RANDOMIZE PROC
+    PRINT "Original array is: ";Displays "Originall array is: " on the screen
+    CALL PRINT_ARR             ;Procedure to print the array ARR2
+    PRINTN                     ;Moves to New line
+    MOV SI ,0000H              ;SI=0000H
+    MOV DI ,00002H             ;DI=0002H
+    MOV CX , 100               ;CX=100
+array3:
+    MOV AX, ARR2[SI]           ;AX=ARR2[SI]
+    MOV DX, ARR2[DI]           ;DX=ARR2[DI]
+    XCHG AX,DX                 ;Swapping values of AX and DX
+    MOV ARR2[SI],AX            ;ARR[SI]=AX
+    MOV  ARR2[DI],DX           ;ARR[DI]=DX
+    MOV BX,r                   ;BX=r
+    ADD DI, BX                 ;DI=DI+BX
+    ADD SI, BX                 ;SI=SI+BX
+    SUB CX, 1                  ;CX=CX-1
+    JNZ array3                 ;Jump if not zero to array3
+    PRINT "Random array is: "  ;Displays "Random array is: " on the screen
+    CALL PRINT_ARR             ;Procedure to print the array ARR2
+    PRINTN                     ;Moves to New line
+RET                            ;RETURN
+RANDOMIZE ENDP                 ;END OF PROCEDURE RANDOMIZE
+
 
 ;/////=========Procdure for Sorting and Storing the Ascending order(DS:2000H) of array  ======//////
+
+
 SORT_ASCEND PROC
                  
- mov CX,LEN   ;CX=LEN=10
- Sub CX,1     ; CX=CX-1
+ mov CX,LEN                      ;CX=LEN=10
+ Sub CX,1                        ; CX=CX-1
 Outer:MOV SI,0000                ;SI=0000H 
       MOV DX,00                  ;DX=0000
       MOV j,DX                   ;j=DX
       Inner:MOV DI,SI;           ;DI=SI
             ADD DI,2             ;DI=DI+2
-            Mov Bx,ARR2[SI]       ;BX=ARR[SI]
-            MOV DX,ARR2[DI]       ;DX=ARR[DI]      
+            Mov Bx,ARR2[SI]      ;BX=ARR[SI]
+            MOV DX,ARR2[DI]      ;DX=ARR[DI]      
             CMP BX,DX            ;Comparing BX with DX
             JLE next:            ;Jump if less than or equal to next
                 XCHG BX,DX       ;Swapping values of BX and DX
-                MOV ARR2[SI], BX  ;ARR[SI]=BX
-                MOV ARR2[DI], DX  ;ARR[DI]=DX
+                MOV ARR2[SI], BX ;ARR[SI]=BX
+                MOV ARR2[DI], DX ;ARR[DI]=DX
             next:
                  MOV SI,DI       ;SI=DI
                  MOV BX,LEN      ;BX=LEN
@@ -105,13 +114,13 @@ MOV ES,AX                        ;ES=AX=2000H
 MOV DI,2000H                     ;DI=2000H
 MOV CX , LEN                     ;CX=LEN=10
   STORE_ASC:                     
-        MOV AX,ARR2[SI]           ;AX=ARR[SI]
+        MOV AX,ARR2[SI]          ;AX=ARR[SI]
         MOV ES:[DI],AX           ;ES:[DI]=AX
         ADD SI, 2                ;SI=SI+2
         ADD DI, 2                ;DI=DI+2
         SUB CX, 1                ;CX=CX-1
         JNZ STORE_ASC            ;Jump if not zero to STORE_ASC       
-RET     
+RET                              ;RETURN
 SORT_ASCEND ENDP                 ;END OF PROCEDURE SORT_ASCEND
  
 
@@ -129,13 +138,13 @@ Outer2:MOV SI,0000               ;SI=0000H
       MOV j,DX                   ;j=DX
       Inner2:MOV DI,SI;          ;DI=SI
             ADD DI,2             ;DI=DI+2
-            Mov Bx,ARR2[SI]       ;BX=ARR[SI]
-            MOV DX,ARR2[DI]       ;DX=ARR[DI]      
+            Mov Bx,ARR2[SI]      ;BX=ARR[SI]
+            MOV DX,ARR2[DI]      ;DX=ARR[DI]      
             CMP BX,DX            ;Comparing BX with DX
             JG next2             ;Jump greater to next2
                 XCHG BX,DX       ;Swapping values of BX and DX
-                MOV ARR2[SI], BX  ;ARR[SI]=BX
-                MOV ARR2[DI], DX  ;ARR[DI]=DX
+                MOV ARR2[SI], BX ;ARR[SI]=BX
+                MOV ARR2[DI], DX ;ARR[DI]=DX
             next2:
                  MOV SI,DI       ;SI=DI
                  MOV BX,LEN      ;BX=LEN
@@ -144,13 +153,11 @@ Outer2:MOV SI,0000               ;SI=0000H
                  MOV AX,j        ;AX=j
                  ADD AX,1;       ;AX=AX+1
                  MOV j,AX        ;j=AX
-                 CMP  AX,BX      ;Comparing AX with BX
-                 JL Inner2        ;Jump if less than to Inner2
+                 CMP  AX,BX      ;Comparing AX with BX 
+                 JL Inner2       ;Jump if less than to Inner2
        MOV AX,i                  ;AX=i
        ADD AX,1                  ;AX=AX+1
        MOV i,AX                  ;i=AX
-       
-                                
 LOOP outer2                      ;While CX!=0 go back to outer2
 MOV SI,0000                      ;SI=0000H
 MOV AX,2000H                     ;AX=2000H
@@ -164,30 +171,28 @@ MOV CX , LEN                     ;CX=LEN=10
         ADD DI, 2                ;DI=DI+2
         SUB CX, 1                ;CX=CX-1
         JNZ STORE_DES            ;Jump if not zero to STORE_DES          
-RET     
-SORT_DESCEND ENDP         ;END OF PROCEDURE SORT_DESCEND
+RET                              ;RETURN
+SORT_DESCEND ENDP                ;END OF PROCEDURE SORT_DESCEND
  
   
 ;/////=========PRINTING ASC ORDER STORED AT ES:2000H DI:2000H ======////// 
  
 
 PRINT_ASC PROC     
-    MOV AX,2000H      ;AX=2000H
-    MOV ES,AX         ;ES=AX=2000H
-    MOV DI , 2000H    ;DI=2000H
-    MOV CX , LEN      ;CX=LEN=10
-    AND CX, 0FH       ;To convert Hexa-Decimal to Integer
+    MOV AX,2000H          ;AX=2000H
+    MOV ES,AX             ;ES=AX=2000H
+    MOV DI , 2000H        ;DI=2000H
+    MOV CX , LEN          ;CX=LEN=10
     array: 
         MOV AX, ES:[DI]   ;AX=ES:[DS]=2000:[2000]
         ADD DI, 2         ;DI=DI+2
         CALL print_num    ;Calling predefined function print_num to print the number stored in AX
         PRINT ' '         ;Moves to New Line
         SUB CX, 1         ;CX=CX-1
-        JNZ array
-    PRINTN
-    
-RET
-PRINT_ASC ENDP          ;END OF PROCEDURE PRINT_ASC
+        JNZ array         ;Jump if not zero to array
+    PRINTN                ;Moves to new Line
+RET                       ;RETURN
+PRINT_ASC ENDP            ;END OF PROCEDURE PRINT_ASC
 
 
 ;/////=========PRINTING DESC ORDER STORED AT ES:2000H DI:3000H ======//////
@@ -198,21 +203,35 @@ PRINT_DES PROC
     MOV ES,AX            ;ES=AX=2000H
     MOV DI , 3000H       ;DI=3000H
     MOV CX , LEN         ;CX=LEN=10
-    AND CX, 0FH          ;To convert Hexa-Decimal to Integer 
     array2: 
         MOV AX, ES:[DI]  ;AX=ES:[DS]=2000:[3000]
         ADD DI, 2        ;DI=DI+2
         CALL print_num   ;Calling predefined function print_num to print the number stored in AX
         PRINT ' '        ;Moves to New Line
         SUB CX, 1        ;CX=CX-1
-        JNZ array2
-    PRINTN               ;Moves to New Line
-    
-RET
-PRINT_DES ENDP     ;END OF PROCEDURE PRINT_DES
+        JNZ array2       ;Jump if not zero to array2
+    PRINTN               ;Moves to New Line   
+RET                      ;RET
+PRINT_DES ENDP           ;END OF PROCEDURE PRINT_DES
 
 
+;/////=========PRINTING ARR2 ======//////
 
+
+PRINT_ARR PROC 
+
+    MOV SI , 0000H       ;SI=0000H
+    MOV CX , LEN         ;CX=LEN=10
+    array4: 
+        MOV AX,ARR2[SI]  ;AX=ARR2[SI]
+        ADD SI, 2        ;SI=SI+2
+        CALL print_num   ;Calling predefined function print_num to print the number stored in AX
+        PRINT ' '        ;Moves to New Line
+        SUB CX, 1        ;CX=CX-1
+        JNZ array4       ;Jump if not zero to array4
+    PRINTN               ;Moves to New Line   
+RET                      ;RET
+PRINT_ARR ENDP           ;END OF PROCEDURE PRINT_DES
 
 ;/////========= DEFINING PREDIFNED FUNCTIONS ======//////
 DEFINE_PRINT_STRING
